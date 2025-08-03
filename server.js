@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require("express");
 const app = express();
-const Event = require("../database/Event"); 
+const Event = require("./database/Event"); 
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
 const twilio = require("twilio");
