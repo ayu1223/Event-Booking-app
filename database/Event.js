@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+require('dotenv').config()
 const uri = process.env.MONGO_URI;
 
 mongoose.connect(uri, {
@@ -14,6 +14,9 @@ const eventSchema = new mongoose.Schema({
   name: String,
   email: String,
   date: String,
+  mode:String,
+  location:String,
+  time: String,
   meetingLink: String
 });
 

@@ -10,7 +10,40 @@
       <h1>Book Your Event</h1>
       <input type="text" name="name" placeholder="Your Name" required />
       <input type="email" name="email" placeholder="Your Email" required />
-      <input type="date" name="date" required />
+      <input type="date" name="date" id="latestdate" required />
+      <input type="time" name="time" required>
+      
+      <label for="mode">Mode</label>
+      <select name="mode" id="mode" required>
+        <option value="">--Select mode--</option>
+        <option value="Offline" <%= mode === 'Offline' ? 'selected': '' %> >Offline</option>
+        <option value="Online"  <%= mode === 'Online' ? 'selected': '' %> >Online</option>
+      </select>
+      <div class="LocationField" id="LocationField" style="display: none;">
+        <input type="text" name="location" placeholder="Enter location" id="LocationInput" required/>
+      </div>
+
+      <script>
+
+        let today = new Date().toISOString().split("T")[0];
+        document.getElementById("latestdate").setAttribute("min",today);
+
+        const ModeSelect = document.getElementById('mode');
+        const LocationField = document.getElementById('LocationField');
+        const LocationInput = document.getElementById('LocationInput');
+
+        ModeSelect.addEventListener("change",function () {
+          if(this.value === 'Offline')
+        {
+          LocationField.style.display="block";
+          LocationInput.setAttribute("required", 'true');
+        }
+        else{
+          LocationField.style.display="none";
+          LocationInput.removeAttribute("required",);
+        }
+        });
+      </script>      
       <button type="submit" class="btn">Book</button>
     </form>
   </div>

@@ -14,16 +14,23 @@ app.use(express.urlencoded({ extended: true }));
 
 // GET /
 app.get("/", (req, res) => {
-  res.render("index"); 
+  res.render("index",{
+    name: "",
+    email:"",
+    date: "",
+    time: "",
+    mode: "", 
+    location:""
+  }); 
 });
 
 // POST /book
 app.post("/book", async (req, res) => {
   
-  const { name, email, date} = req.body;
+  const { name, email, date,mode,time, location} = req.body;
   const meetingLink = `https://meet.jit.si/${uuidv4()}`;
 
-  const event = new Event({ name, email, date, meetingLink });
+  const event = new Event({ name, email, date, meetingLink,location, time, mode });
   await event.save();
 
   const transporter = nodemailer.createTransport({
@@ -33,8 +40,8 @@ app.post("/book", async (req, res) => {
       pass: process.env.EMAIL_PASS
     }
   });
-
-  const mailOptions = {
+  if(mode=="Online"){
+   mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Event Booking Confirmation",
@@ -42,18 +49,39 @@ app.post("/book", async (req, res) => {
       <h2>Hello ${name},</h2>
       <h3>Booking Confirmed</h3>
       <p>Your event is booked for date: <strong>${date}</strong>.</p>
+      <p>Time: ${time}</p>
       <p>You can join the meeting here: <a href="${meetingLink}">${meetingLink}</a></p>
     `
   };
+  }
+  else{
+    mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Event Booking Confirmation",
+    html: `
+      <h2>Hello ${name},</h2>
+      <h3>Booking Confirmed</h3>
+      <p>Your event is booked for date: <strong>${date}</strong>.</p>
+      <p>Time: ${time}</p>
+      <p>Event Location: ${location}</p>
+    `
+  };
+
+  }
   
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Error sending email.");
     }
+    else if(mode=="Offline"){
+      res.render("bookof",{email,date,location,time})
+      
+    }
     else{
       
-      res.render("book",{email,meetingLink})
+      res.render("bookon",{email,meetingLink,date,time})
 
     }
   });
@@ -64,4 +92,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
