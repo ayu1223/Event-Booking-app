@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "My Bookings" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <h1>My Bookings</h1>
+    <p class="field-hint">Enter the email address you used when booking to see your bookings.</p>
+
+    <% if (errorMessage) { %>
+      <div class="alert alert-error"><%= errorMessage %></div>
+    <% } %>
+
+    <form method="POST" action="/my-bookings" class="stack" style="margin-bottom: 24px;">
+      <div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="<%= email %>" required />
+      </div>
+      <button type="submit" class="btn">Find My Bookings</button>
+    </form>
+
+    <% if (bookings !== null) { %>
+      <% if (bookings.length === 0) { %>
+        <p class="field-hint">No bookings found for that email address.</p>
+      <% } else { %>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Mode / Location</th>
+                <th>Booking ID</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% bookings.forEach(({ booking, event }) => { %>
+                <tr>
+                  <td><%= event ? event.title : 'Event removed' %></td>
+                  <td><%= event ? new Date(event.date).toLocaleDateString() : '-' %></td>
+                  <td><%= event ? (event.mode === 'online' ? 'Online' : event.location) : '-' %></td>
+                  <td><%= booking.bookingId %></td>
+                  <td><span class="badge badge-<%= booking.status %>"><%= booking.status %></span></td>
+                  <td>
+                    <a class="btn btn-sm btn-secondary" href="/booking/confirmation/<%= booking.bookingId %>">View</a>
+                    <% if (booking.status === 'confirmed' && event && getEffectiveStatus(event) === 'upcoming') { %>
+                      <a class="btn btn-sm btn-secondary" href="/bookings/<%= booking.bookingId %>/reschedule">Reschedule</a>
+                      <form method="POST" action="/bookings/<%= booking.bookingId %>/cancel" style="display:inline;">
+                        <input type="hidden" name="email" value="<%= email %>" />
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Cancel this booking?')">Cancel</button>
+                      </form>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    <% } %>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

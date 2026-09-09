@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Unable to Continue" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <main class="container">
+    <div class="error-page">
+      <div class="code">⚠️</div>
+      <h1>Unable to continue</h1>
+      <p class="field-hint"><%= message %></p>
+      <a href="/events" class="btn">Browse Events</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

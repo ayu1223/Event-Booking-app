@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = event ? "Edit Event" : "New Event" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <h1><%= event ? "Edit Event" : "Create New Event" %></h1>
+
+    <% if (errorMessage) { %>
+      <div class="alert alert-error"><%= errorMessage %></div>
+    <% } %>
+
+    <form method="POST" action="<%= event ? '/admin/events/' + event._id + '/edit' : '/admin/events' %>" class="stack" style="max-width: 600px;">
+      <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required maxlength="150" value="<%= event ? event.title : '' %>" />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" maxlength="3000"><%= event ? event.description : '' %></textarea>
+      </div>
+      <div>
+        <label for="organizer">Organizer</label>
+        <input type="text" id="organizer" name="organizer" required value="<%= event ? event.organizer : '' %>" />
+      </div>
+      <div>
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" required data-min-today
+          value="<%= event ? new Date(event.date).toISOString().split('T')[0] : '' %>" />
+      </div>
+      <div style="display:flex; gap: 12px;">
+        <div style="flex:1;">
+          <label for="startTime">Start Time</label>
+          <input type="time" id="startTime" name="startTime" required value="<%= event ? event.startTime : '' %>" />
+        </div>
+        <div style="flex:1;">
+          <label for="endTime">End Time</label>
+          <input type="time" id="endTime" name="endTime" required value="<%= event ? event.endTime : '' %>" />
+        </div>
+      </div>
+      <div>
+        <label for="timezone">Timezone</label>
+        <input type="text" id="timezone" name="timezone" value="<%= event ? event.timezone : 'Asia/Kolkata' %>" />
+      </div>
+      <div>
+        <label for="mode">Mode</label>
+        <select id="mode" name="mode" required>
+          <option value="">-- Select mode --</option>
+          <option value="online" <%= event && event.mode === 'online' ? 'selected' : '' %>>Online</option>
+          <option value="offline" <%= event && event.mode === 'offline' ? 'selected' : '' %>>Offline</option>
+        </select>
+      </div>
+      <div id="location-field">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" value="<%= event ? event.location : '' %>" />
+        <div class="field-hint">Required for offline events.</div>
+      </div>
+      <div>
+        <label for="capacity">Capacity</label>
+        <input type="number" id="capacity" name="capacity" min="1" required value="<%= event ? event.capacity : '' %>" />
+        <% if (event) { %>
+          <div class="field-hint"><%= event.capacity - event.availableSeats %> seats already booked.</div>
+        <% } %>
+      </div>
+      <button type="submit" class="btn"><%= event ? "Save Changes" : "Create Event" %></button>
+    </form>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

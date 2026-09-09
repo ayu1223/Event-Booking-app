@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Book " + event.title %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="steps">
+      <span class="step">Event Details</span>
+      <span class="step active">Attendee Details</span>
+      <span class="step">Confirmation</span>
+    </div>
+
+    <div class="card" style="max-width: 560px;">
+      <h1>Book: <%= event.title %></h1>
+      <p class="meta">
+        📅 <%= new Date(event.date).toLocaleDateString() %> &middot; 🕐 <%= event.startTime %> - <%= event.endTime %>
+        &middot; <%= event.availableSeats %> seats left
+      </p>
+
+      <% if (errorMessage) { %>
+        <div class="alert alert-error"><%= errorMessage %></div>
+      <% } %>
+
+      <form method="POST" action="/events/<%= event._id %>/book" class="stack">
+        <div>
+          <label for="attendeeName">Full Name</label>
+          <input type="text" id="attendeeName" name="attendeeName" required minlength="2" maxlength="100" />
+        </div>
+        <div>
+          <label for="attendeeEmail">Email Address</label>
+          <input type="email" id="attendeeEmail" name="attendeeEmail" required />
+        </div>
+        <button type="submit" class="btn btn-block">Confirm Booking</button>
+      </form>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

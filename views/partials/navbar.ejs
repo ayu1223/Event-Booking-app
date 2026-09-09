@@ -1,0 +1,22 @@
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="brand">🎟️ EventBook</a>
+    <nav class="nav-links">
+      <a href="/events">Browse Events</a>
+      <a href="/my-bookings">My Bookings</a>
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <a href="/my-events">My Events</a>
+        <a href="/my-events/new">+ Create Event</a>
+        <span class="field-hint">Hi, <%= currentUser.name %></span>
+        <form method="POST" action="/logout" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-secondary">Log Out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+      <% } %>
+      <a href="/admin">Admin</a>
+      <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+    </nav>
+  </div>
+</header>

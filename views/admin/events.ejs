@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Manage Events" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="footer-row" style="margin-top: 20px;">
+      <h1>Manage Events</h1>
+      <a href="/admin/events/new" class="btn">+ New Event</a>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Mode</th>
+            <th>Seats</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% events.forEach(event => { %>
+            <tr>
+              <td><a href="/events/<%= event._id %>"><%= event.title %></a></td>
+              <td><%= new Date(event.date).toLocaleDateString() %> <%= event.startTime %></td>
+              <td><%= event.mode %></td>
+              <td><%= event.availableSeats %> / <%= event.capacity %></td>
+              <td><span class="badge badge-<%= getEffectiveStatus(event) %>"><%= getEffectiveStatus(event) %></span></td>
+              <td>
+                <a class="btn btn-sm btn-secondary" href="/admin/events/<%= event._id %>/edit">Edit</a>
+                <% if (event.status !== 'cancelled') { %>
+                  <form method="POST" action="/admin/events/<%= event._id %>/cancel" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Cancel this event? All attendees will be notified.')">Cancel</button>
+                  </form>
+                <% } %>
+                <form method="POST" action="/admin/events/<%= event._id %>/delete" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this event permanently? This only works if there are no active bookings.')">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Log In" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="card" style="max-width: 420px; margin: 40px auto;">
+      <h1>Log In</h1>
+
+      <% if (errorMessage) { %>
+        <div class="alert alert-error"><%= errorMessage %></div>
+      <% } %>
+
+      <form method="POST" action="/login" class="stack">
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autofocus />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" class="btn btn-block">Log In</button>
+      </form>
+
+      <p class="field-hint" style="margin-top: 16px;">Don't have an account? <a href="/register">Register</a></p>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

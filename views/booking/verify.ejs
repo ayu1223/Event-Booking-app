@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Verify Booking" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <h1>Booking Verification</h1>
+
+    <% if (!booking) { %>
+      <div class="alert alert-error">No booking found with that ID.</div>
+    <% } else { %>
+      <div class="card" style="max-width: 480px;">
+        <span class="badge badge-<%= booking.status %>"><%= booking.status %></span>
+        <table style="margin-top: 12px;">
+          <tr><td>Booking ID</td><td><strong><%= booking.bookingId %></strong></td></tr>
+          <tr><td>Attendee</td><td><%= booking.attendeeName %></td></tr>
+          <tr><td>Event</td><td><%= event ? event.title : 'Unknown' %></td></tr>
+          <tr><td>Date</td><td><%= event ? new Date(event.date).toLocaleDateString() : '-' %></td></tr>
+          <tr><td>Status</td><td><%= booking.status %></td></tr>
+        </table>
+      </div>
+    <% } %>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

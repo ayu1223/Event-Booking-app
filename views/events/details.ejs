@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = event.title %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <a href="/events">&larr; Back to events</a>
+
+    <div class="card" style="margin-top: 16px;">
+      <span class="badge badge-<%= getEffectiveStatus(event) %>"><%= getEffectiveStatus(event) %></span>
+      <h1><%= event.title %></h1>
+      <p class="meta">Organized by <strong><%= event.organizer %></strong></p>
+
+      <% if (getEffectiveStatus(event) === 'upcoming') { %>
+        <p class="countdown" data-countdown-target="<%= event.getStartDateTime().toISOString() %>"></p>
+      <% } %>
+
+      <p><%= event.description || 'No description provided.' %></p>
+
+      <table style="max-width: 480px; margin: 16px 0;">
+        <tr><td>Date</td><td><%= new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></td></tr>
+        <tr><td>Time</td><td><%= event.startTime %> - <%= event.endTime %> (<%= event.timezone %>)</td></tr>
+        <tr><td>Mode</td><td><%= event.mode === 'online' ? 'Online' : 'Offline' %></td></tr>
+        <tr>
+          <td><%= event.mode === 'online' ? 'Meeting' : 'Location' %></td>
+          <td>
+            <% if (event.mode === 'online') { %>
+              Link will be shared after booking
+            <% } else { %>
+              <%= event.location %>
+              <br/><a href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent(event.location) %>" target="_blank" rel="noopener">View on map</a>
+            <% } %>
+          </td>
+        </tr>
+        <tr><td>Seats</td><td><%= event.availableSeats %> of <%= event.capacity %> available</td></tr>
+      </table>
+
+      <% if (getEffectiveStatus(event) === 'cancelled') { %>
+        <div class="alert alert-error">This event has been cancelled.</div>
+      <% } else if (getEffectiveStatus(event) === 'completed') { %>
+        <div class="alert alert-info">This event has already ended.</div>
+      <% } else if (event.availableSeats <= 0) { %>
+        <div class="alert alert-error">This event is fully booked.</div>
+      <% } else { %>
+        <a href="/events/<%= event._id %>/book" class="btn">Book This Event</a>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Booking Confirmed" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="steps">
+      <span class="step">Event Details</span>
+      <span class="step">Attendee Details</span>
+      <span class="step active">Confirmation</span>
+    </div>
+
+    <div class="card confirmation-hero">
+      <div class="icon">✅</div>
+      <h1>Booking Confirmed!</h1>
+      <p>A confirmation email has been sent to <strong><%= booking.attendeeEmail %></strong>.</p>
+      <div class="booking-id-box" id="booking-id-text"><%= booking.bookingId %></div>
+      <br/>
+      <button class="btn btn-secondary btn-sm" data-copy-target="#booking-id-text">Copy Booking ID</button>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <h2><%= event.title %></h2>
+      <p class="meta">
+        📅 <%= new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+        &middot; 🕐 <%= event.startTime %> - <%= event.endTime %> (<%= event.timezone %>)
+      </p>
+
+      <% if (getEffectiveStatus(event) === 'upcoming') { %>
+        <p class="countdown" data-countdown-target="<%= event.getStartDateTime().toISOString() %>"></p>
+      <% } %>
+
+      <% if (event.mode === 'online') { %>
+        <p><strong>Meeting Link:</strong> <span id="meeting-link-text"><%= event.meetingLink %></span></p>
+        <div class="action-row">
+          <a class="btn" href="<%= event.meetingLink %>" target="_blank" rel="noopener" data-join-button
+             <%= getEffectiveStatus(event) === 'upcoming' ? 'disabled' : '' %>>Join Meeting</a>
+          <button class="btn btn-secondary" data-copy-target="#meeting-link-text">Copy Meeting Link</button>
+        </div>
+      <% } else { %>
+        <p><strong>Venue:</strong> <%= event.location %></p>
+        <a href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent(event.location) %>" target="_blank" rel="noopener">View on map</a>
+      <% } %>
+
+      <div class="action-row">
+        <a class="btn btn-secondary" href="<%= googleCalendarUrl %>" target="_blank" rel="noopener">Add to Google Calendar</a>
+        <a class="btn btn-secondary" href="/booking/<%= booking.bookingId %>/calendar.ics">Download Calendar Event (.ics)</a>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <p class="field-hint">Scan to verify this booking at the event:</p>
+        <div class="qr-code"><img src="<%= qrCode %>" alt="Booking QR code" width="160" height="160" /></div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <a href="/my-bookings" class="btn btn-secondary">Go to My Bookings</a>
+      <a href="/events" class="btn btn-secondary">Browse More Events</a>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

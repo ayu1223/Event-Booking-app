@@ -1,0 +1,11 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title><%= typeof pageTitle !== 'undefined' ? pageTitle + ' | Event Booking Platform' : 'Event Booking Platform' %></title>
+<link rel="stylesheet" href="/css/style.css" />
+<script>
+  // Apply saved theme before paint to avoid a flash of the wrong theme.
+  (function () {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  })();
+</script>

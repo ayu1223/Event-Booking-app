@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Server Error" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <main class="container">
+    <div class="error-page">
+      <div class="code">500</div>
+      <h1>Something went wrong</h1>
+      <p class="field-hint"><%= message %></p>
+      <% if (stack) { %>
+        <pre style="text-align:left; overflow:auto; background: var(--surface-alt); padding: 16px; border-radius: 8px;"><%= stack %></pre>
+      <% } %>
+      <a href="/" class="btn">Go Home</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

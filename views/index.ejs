@@ -1,51 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Event Booking</title>
-  <link rel="stylesheet" href="styles.css">
+  <% var pageTitle = "Home" %>
+  <%- include('partials/head') %>
 </head>
 <body>
-  <div class="container">
-    <form action="/book" method="POST">
-      <h1>Book Your Event</h1>
-      <input type="text" name="name" placeholder="Your Name" required />
-      <input type="email" name="email" placeholder="Your Email" required />
-      <input type="date" name="date" id="latestdate" required />
-      <input type="time" name="time" required>
-      
-      <label for="mode">Mode</label>
-      <select name="mode" id="mode" required>
-        <option value="">--Select mode--</option>
-        <option value="Offline" <%= mode === 'Offline' ? 'selected': '' %> >Offline</option>
-        <option value="Online"  <%= mode === 'Online' ? 'selected': '' %> >Online</option>
-      </select>
-      <div class="LocationField" id="LocationField" style="display: none;">
-        <input type="text" name="location" placeholder="Enter location" id="LocationInput" required/>
+  <%- include('partials/navbar') %>
+
+  <section class="hero">
+    <h1>Find and book great events, effortlessly.</h1>
+    <p>Browse upcoming online and offline events, reserve your seat in seconds, and manage your bookings all in one place.</p>
+    <a href="/events" class="btn">Browse Events</a>
+  </section>
+
+  <main class="container">
+    <h2>Upcoming Events</h2>
+    <% if (upcomingEvents.length === 0) { %>
+      <p class="field-hint">No upcoming events right now. Check back soon!</p>
+    <% } else { %>
+      <div class="grid">
+        <% upcomingEvents.forEach(event => { %>
+          <div class="card event-card">
+            <span class="badge badge-<%= getEffectiveStatus(event) %>"><%= getEffectiveStatus(event) %></span>
+            <h3><a href="/events/<%= event._id %>"><%= event.title %></a></h3>
+            <div class="meta">
+              📅 <%= new Date(event.date).toLocaleDateString() %> &middot; 🕐 <%= event.startTime %>
+              &middot; <%= event.mode === 'online' ? '💻 Online' : '📍 ' + event.location %>
+            </div>
+            <div class="footer-row">
+              <span class="field-hint"><%= event.availableSeats %> / <%= event.capacity %> seats left</span>
+              <a href="/events/<%= event._id %>" class="btn btn-sm">View</a>
+            </div>
+          </div>
+        <% }) %>
       </div>
+    <% } %>
+  </main>
 
-      <script>
-
-        let today = new Date().toISOString().split("T")[0];
-        document.getElementById("latestdate").setAttribute("min",today);
-
-        const ModeSelect = document.getElementById('mode');
-        const LocationField = document.getElementById('LocationField');
-        const LocationInput = document.getElementById('LocationInput');
-
-        ModeSelect.addEventListener("change",function () {
-          if(this.value === 'Offline')
-        {
-          LocationField.style.display="block";
-          LocationInput.setAttribute("required", 'true');
-        }
-        else{
-          LocationField.style.display="none";
-          LocationInput.removeAttribute("required",);
-        }
-        });
-      </script>      
-      <button type="submit" class="btn">Book</button>
-    </form>
-  </div>
+  <%- include('partials/footer') %>
 </body>
 </html>

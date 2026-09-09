@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Page Not Found" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+  <main class="container">
+    <div class="error-page">
+      <div class="code">404</div>
+      <h1>Page not found</h1>
+      <p class="field-hint">The page <%= url %> doesn't exist.</p>
+      <a href="/" class="btn">Go Home</a>
+    </div>
+  </main>
+  <%- include('../partials/footer') %>
+</body>
+</html>

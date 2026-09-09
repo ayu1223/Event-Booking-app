@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Admin Dashboard" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="footer-row" style="margin-top: 20px;">
+      <h1>Admin Dashboard</h1>
+      <form method="POST" action="/admin/logout">
+        <button type="submit" class="btn btn-secondary btn-sm">Log Out</button>
+      </form>
+    </div>
+
+    <div class="action-row">
+      <a href="/admin/events" class="btn btn-secondary">Manage Events</a>
+      <a href="/admin/events/new" class="btn">+ New Event</a>
+      <a href="/admin/bookings" class="btn btn-secondary">Manage Bookings</a>
+      <a href="/admin/bookings/export" class="btn btn-secondary">Export Bookings CSV</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="value"><%= stats.totalEvents %></div><div class="label">Total Events</div></div>
+      <div class="stat-card"><div class="value"><%= stats.upcomingEvents %></div><div class="label">Upcoming Events</div></div>
+      <div class="stat-card"><div class="value"><%= stats.totalBookings %></div><div class="label">Total Bookings</div></div>
+      <div class="stat-card"><div class="value"><%= stats.confirmedBookings %></div><div class="label">Confirmed Bookings</div></div>
+      <div class="stat-card"><div class="value"><%= stats.cancelledBookings %></div><div class="label">Cancelled Bookings</div></div>
+      <div class="stat-card"><div class="value"><%= stats.attendedCount %></div><div class="label">Attended</div></div>
+      <div class="stat-card"><div class="value"><%= stats.availableSeats %></div><div class="label">Available Seats</div></div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

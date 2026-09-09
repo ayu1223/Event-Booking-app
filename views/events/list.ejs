@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Browse Events" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <h1>Browse Events</h1>
+
+    <form method="GET" action="/events" class="filter-bar">
+      <input type="text" name="search" placeholder="Search events..." value="<%= search %>" />
+      <select name="mode">
+        <option value="">All modes</option>
+        <option value="online" <%= mode === 'online' ? 'selected' : '' %>>Online</option>
+        <option value="offline" <%= mode === 'offline' ? 'selected' : '' %>>Offline</option>
+      </select>
+      <select name="status">
+        <option value="">Active events</option>
+        <option value="cancelled" <%= status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+      </select>
+      <button type="submit" class="btn btn-sm">Filter</button>
+    </form>
+
+    <% if (events.length === 0) { %>
+      <p class="field-hint">No events match your filters.</p>
+    <% } else { %>
+      <div class="grid">
+        <% events.forEach(event => { %>
+          <div class="card event-card">
+            <span class="badge badge-<%= getEffectiveStatus(event) %>"><%= getEffectiveStatus(event) %></span>
+            <h3><a href="/events/<%= event._id %>"><%= event.title %></a></h3>
+            <div class="meta">
+              📅 <%= new Date(event.date).toLocaleDateString() %> &middot; 🕐 <%= event.startTime %>
+              &middot; <%= event.mode === 'online' ? '💻 Online' : '📍 ' + event.location %>
+            </div>
+            <div class="footer-row">
+              <span class="field-hint"><%= event.availableSeats %> / <%= event.capacity %> seats left</span>
+              <a href="/events/<%= event._id %>" class="btn btn-sm">View</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <div class="pagination">
+        <% for (let p = 1; p <= totalPages; p++) { %>
+          <a class="<%= p === currentPage ? 'active' : '' %>"
+             href="/events?page=<%= p %>&search=<%= encodeURIComponent(search) %>&mode=<%= mode %>&status=<%= status %>">
+             <%= p %>
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>

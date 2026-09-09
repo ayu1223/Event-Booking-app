@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% var pageTitle = "Manage Bookings" %>
+  <%- include('../partials/head') %>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <div class="footer-row" style="margin-top: 20px;">
+      <h1>Manage Bookings</h1>
+      <a href="/admin/bookings/export" class="btn btn-secondary">Export CSV</a>
+    </div>
+
+    <form method="GET" action="/admin/bookings" class="filter-bar">
+      <input type="text" name="search" placeholder="Search name, email, booking ID..." value="<%= search %>" />
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="confirmed" <%= status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+        <option value="cancelled" <%= status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+        <option value="attended" <%= status === 'attended' ? 'selected' : '' %>>Attended</option>
+      </select>
+      <select name="mode">
+        <option value="">All modes</option>
+        <option value="online" <%= mode === 'online' ? 'selected' : '' %>>Online</option>
+        <option value="offline" <%= mode === 'offline' ? 'selected' : '' %>>Offline</option>
+      </select>
+      <select name="eventId">
+        <option value="">All events</option>
+        <% events.forEach(ev => { %>
+          <option value="<%= ev._id %>" <%= eventId === String(ev._id) ? 'selected' : '' %>><%= ev.title %></option>
+        <% }) %>
+      </select>
+      <button type="submit" class="btn btn-sm">Filter</button>
+    </form>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Attendee</th>
+            <th>Event</th>
+            <th>Status</th>
+            <th>Booked On</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% bookingsWithEvents.forEach(({ booking, event }) => { %>
+            <tr>
+              <td><%= booking.bookingId %></td>
+              <td><%= booking.attendeeName %><br/><span class="field-hint"><%= booking.attendeeEmail %></span></td>
+              <td><%= event ? event.title : 'Unknown' %></td>
+              <td><span class="badge badge-<%= booking.status %>"><%= booking.status %></span></td>
+              <td><%= new Date(booking.createdAt).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <% for (let p = 1; p <= totalPages; p++) { %>
+        <a class="<%= p === currentPage ? 'active' : '' %>"
+           href="/admin/bookings?page=<%= p %>&search=<%= encodeURIComponent(search) %>&status=<%= status %>&mode=<%= mode %>&eventId=<%= eventId %>">
+           <%= p %>
+        </a>
+      <% } %>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+</html>
