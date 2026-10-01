@@ -129,9 +129,6 @@ async function createEvent(req, res) {
   });
 
   if (mode === "online") {
-    // Meeting link is generated lazily on first booking-free basis; but
-    // for online events we generate it up front so it can be shown on the
-    // details page even before anyone books.
     const { v4: uuidv4 } = require("uuid");
     event.meetingLink = `https://meet.jit.si/${uuidv4()}`;
   }
@@ -188,7 +185,6 @@ async function cancelEvent(req, res, next) {
   event.status = "cancelled";
   await event.save();
 
-  // Cancel all confirmed bookings for this event and notify attendees.
   const { sendEventCancellationEmail } = require("../services/emailService");
   const bookings = await Booking.find({ eventId: event._id, status: "confirmed" });
 

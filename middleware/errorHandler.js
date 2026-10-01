@@ -14,8 +14,6 @@ function notFoundHandler(req, res) {
   res.render("errors/404", { url: req.originalUrl });
 }
 
-// Express recognizes error-handling middleware by its 4-argument signature.
-// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   const isProduction = process.env.NODE_ENV === "production";
   const statusCode = err.statusCode || 500;

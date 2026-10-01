@@ -26,10 +26,7 @@ adminSchema.statics.hashPassword = function (plainPassword) {
   return bcrypt.hash(plainPassword, 12);
 };
 
-/**
- * Ensures a single admin account exists, based on ADMIN_EMAIL / ADMIN_PASSWORD
- * environment variables. Safe to call on every startup.
- */
+
 adminSchema.statics.ensureSeedAdmin = async function () {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;

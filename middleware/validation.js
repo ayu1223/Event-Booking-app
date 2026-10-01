@@ -1,8 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const { AppError } = require("./errorHandler");
 
-// Collects express-validator errors and turns the first one into an AppError,
-// so every route gets consistent, server-enforced validation.
+
 function handleValidationErrors(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -27,11 +26,6 @@ const bookingValidationRules = [
     .normalizeEmail(),
 ];
 
-// Shared by both the admin event form and the organizer (self-serve) event
-// form. The admin form additionally collects an explicit "organizer" text
-// field; the organizer form fills it in server-side from the logged-in
-// user's name, so that check is added separately (see eventValidationRules
-// vs organizerEventValidationRules below).
 const baseEventValidationRules = [
   body("title")
     .trim()

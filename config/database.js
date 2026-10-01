@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 
-/**
- * Connects to MongoDB using the connection string from environment variables.
- * Resolves once connected; rejects (and lets the caller decide) on failure.
- */
 async function connectDB() {
   const uri = process.env.MONGO_URI;
 

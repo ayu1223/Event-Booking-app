@@ -60,8 +60,7 @@ async function createBooking(req, res, next) {
       );
     }
 
-    // Atomically reserve a seat to avoid race conditions between concurrent
-    // bookings. Only succeeds if a seat is still available right now.
+
     const reserved = await Event.findOneAndUpdate(
       { _id: event._id, availableSeats: { $gt: 0 }, status: { $ne: "cancelled" } },
       { $inc: { availableSeats: -1 } },
@@ -84,8 +83,7 @@ async function createBooking(req, res, next) {
         });
         break;
       } catch (err) {
-        if (err.code === 11000 && attempt < 4) continue; // bookingId collision, retry
-        // Roll back the seat reservation if booking creation ultimately failed.
+        if (err.code === 11000 && attempt < 4) continue; 
         await Event.updateOne({ _id: event._id }, { $inc: { availableSeats: 1 } });
         throw err;
       }
@@ -249,7 +247,6 @@ async function rescheduleBooking(req, res, next) {
     return next(new AppError("The selected event has already started.", 409));
   }
 
-  // Free the seat on the old event and mark the old booking as cancelled.
   if (oldEvent) {
     await Event.updateOne({ _id: oldEvent._id }, { $inc: { availableSeats: 1 } });
   }

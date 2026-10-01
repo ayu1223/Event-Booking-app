@@ -5,7 +5,6 @@ const BOOKING_STATUSES = ["confirmed", "cancelled", "attended"];
 const bookingSchema = new mongoose.Schema(
   {
     bookingId: {
-      // human-friendly ID, e.g. EVT-2026-A7F92K
       type: String,
       required: true,
       unique: true,
@@ -40,12 +39,10 @@ const bookingSchema = new mongoose.Schema(
       index: true,
     },
     remindersSent: {
-      // tracks which reminders have already gone out to avoid duplicates
-      type: [String], // e.g. ["24h", "1h"]
+      type: [String], 
       default: [],
     },
     rescheduledFrom: {
-      // if this booking is the result of a reschedule, points to the original booking
       type: mongoose.Schema.Types.ObjectId,
       ref: "Booking",
       default: null,
@@ -54,7 +51,6 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate active bookings for the same email on the same event
 bookingSchema.index(
   { eventId: 1, attendeeEmail: 1, status: 1 },
   { unique: false }
